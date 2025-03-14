@@ -1,43 +1,50 @@
 import pandas as pd
 import numpy as np
+import xgboost as xgb 
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
 
-def encodeDf(df):
-    encodedDf = df.copy()
+def label_encode(df):
+    col_arr = []
 
-    for row in df.itertuples(index=True, name="Row"):
-        for col in df.columns:
-            value = str(getattr(row, col))
+    for column in df:
+        if df[column].dtypes == object:
+            col_arr.append(column)
 
-            encoded_bytes = value.encode('utf-8')
-            encoded_int = int.from_bytes(encoded_bytes)
+    le = LabelEncoder()
+    df[col_arr] = df[col_arr].apply(le.fit_transform)
 
-            encodedDf.replace(to_replace=value, value=encoded_int, inplace=True)
+    return df
 
-    return encodedDf
+df = pd.read_csv("historical_transactions.csv")
+features = df.head(0)
 
-def decodeDf(df):
-    decodedDf = df.copy()
+# Define a target column
+target = df["account"]
 
-    for row in df.itertuples(index=True, name="Row"):
-        for col in df.columns:
-            value = int(getattr(row, col))
-            print(value)
-            
-            decoded_bytes = value.to_bytes((value.bit_length() + 7) // 8)
-            decoded_str = decoded_bytes.decode('utf-8')
+# Encode columns with object values to int unsing a label encoder
+df = label_encode(df)
 
-            decodedDf.replace(to_replace=value, value=decoded_str, inplace=True)
-
-    return decodedDf
-
-csvDf = pd.read_csv("historical_transactions.csv")
-features = csvDf.head(0)
-
-df = encodeDf(csvDf)
-decodeDfTest = decodeDf(df)  
+# Make a training df and a valid df for training
+n_valid = 40
+train_df, valid_df = train_test_split(df, test_size=n_valid, random_state=1)
+train_df.shape, valid_df.shape
 
 
-# encodedDf.info()
-print(df)
-print(decodeDfTest)
+params = {
+    'tree-method': 'approx',
+    'objective': 'multi:softprob',
+}
+num_boost_round = 10
+
+clf = xgb.XGBClassifier(n_estimators=num_boost_round, **params)
+clf.fit(train_df[features], train_df[target], 
+        eval_set=[(train_df[features], train_df[target]), (valid_df[features], valid_df[target])], 
+        verbose=2);
+
+# df.to_csv("test.csv")
+
+# train_df.info()
+# valid_df.info()
+# print(target)
 # print(features)
