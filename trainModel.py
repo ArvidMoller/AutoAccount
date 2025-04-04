@@ -1,11 +1,13 @@
-import pandas as pd
 import os
 import glob
+import pickle
 import numpy as np
+import pandas as pd
 import xgboost as xgb 
+from sklearn import metrics
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
-from sklearn import metrics
+
 
 def label_encode(df, target_label):
     le_dict = {}
@@ -27,20 +29,20 @@ def accuracy(target, features):
     metrics.accuracy_score(y_true, y_pred)
     print(metrics.classification_report(y_true, y_pred))
 
-def save_model():
-    user_input = input("Save model as .JSON? (y/n) \n")
+def save_model(dict):
+    user_input = input("Save model as .pkl? (y/n) \n")
     acceptedInput = ["y", "n"]
     while not user_input in acceptedInput:
-        user_input = input("Save model as .JSON? (y/n) \n")
+        user_input = input("Save model as .pkl? (y/n) \n")
 
     if user_input == "n":
         return
     elif not os.path.exists("models"):
         os.mkdir("models")
 
-    file_num = len(glob.glob("models/*.json", recursive=True))
-    clf.save_model(f"models/model{file_num}.json")
-    
+    file_num = int(len(glob.glob("models/*.pkl"))/2)
+    pickle.dump(clf, open(f"models/model{file_num}.pkl", "wb"))
+    pickle.dump(dict, open(f"models/modelInfo{file_num}.pkl", "wb"))
 
 df = pd.read_csv("historical_transactions.csv")
 
@@ -50,6 +52,7 @@ features = df.drop(columns=[target]).columns
 
 # Encode columns with object values to int unsing a label encoder
 df, le_dict = label_encode(df, target)
+print(le_dict)
 
 # Make a training df and a valid df for training
 n_valid = 0.2
@@ -67,10 +70,10 @@ num_boost_round = 1000      # How many boosting stages to preform, higher number
 clf = xgb.XGBClassifier(n_estimators=num_boost_round, **params)
 clf.fit(train_df[features], train_df[target], 
         eval_set=[(train_df[features], train_df[target]), (valid_df[features], valid_df[target])], 
-        verbose=2);
+        verbose=0);
 
 # Calculate accuracy
 accuracy(valid_df[target], valid_df[features])
 
-# Save model as .JSON
-save_model()
+# Save model as .pkl
+save_model(le_dict)
