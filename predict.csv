@@ -1,2 +1,2 @@
 supplier,amount,department,account,cost_center,project_id,personnel,reference,tax_percentage,city,created_at,Test_category
-Supplier4,3402.87,department_4,,CC3,P2,EMP5,REF1,25,Malmo,2024-11-18 07:40:26.642145,Test_category_1
+Supplier2,3712.87,department_4,,CC4,P2,EMP5,REF1,25,Malmo,2024-11-18 07:40:26.642145,Test_category_2

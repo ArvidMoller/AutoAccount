@@ -9,6 +9,21 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 
 
+def to_dateTime(df, col):
+    time = ["year", "month", "day", "hour", "minute"]
+
+    df[col] = pd.to_datetime(df[col], errors="coerce")
+    
+    for i in time:
+        try:  
+            df[f"created_at_{i}"] = getattr(df[col].dt, i)
+        except:
+            print(f"{i} is missing")
+
+    df = df.drop(columns=[col])
+
+    return df
+
 def label_encode(df, target_label):
     le_dict = {}
 
@@ -29,7 +44,7 @@ def accuracy(target, features):
     metrics.accuracy_score(y_true, y_pred)
     print(metrics.classification_report(y_true, y_pred))
 
-def save_model(dict):
+def save_model(clf, dict):
     user_input = input("Save model as .pkl? (y/n) \n")
     acceptedInput = ["y", "n"]
     while not user_input in acceptedInput:
@@ -48,11 +63,17 @@ df = pd.read_csv("historical_transactions.csv")
 
 # Define a target column
 target = "account"
-features = df.drop(columns=[target]).columns
+
+# Divide time to individual columns
+df = to_dateTime(df, "created_at")
 
 # Encode columns with object values to int unsing a label encoder
 df, le_dict = label_encode(df, target)
-print(le_dict)
+
+# Define feautres columns
+features = df.drop(columns=[target]).columns
+
+df.to_csv("test.csv")
 
 # Make a training df and a valid df for training
 n_valid = 0.2
@@ -64,16 +85,16 @@ params = {
     'tree_method': 'approx',
     'objective': 'multi:softprob',
 }
-num_boost_round = 1000      # How many boosting stages to preform, higher number = better performace (usually)
+num_boost_round = 2000      # How many boosting stages to preform, higher number = better performace (usually)
 
 # Train model
 clf = xgb.XGBClassifier(n_estimators=num_boost_round, **params)
 clf.fit(train_df[features], train_df[target], 
         eval_set=[(train_df[features], train_df[target]), (valid_df[features], valid_df[target])], 
-        verbose=0);
+        verbose=2);
 
 # Calculate accuracy
 accuracy(valid_df[target], valid_df[features])
 
 # Save model as .pkl
-save_model(le_dict)
+save_model(clf, le_dict)
