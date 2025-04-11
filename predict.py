@@ -1,6 +1,8 @@
 import glob
 import pickle
+import shap
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 df = pd.read_csv("predict.csv")
@@ -35,8 +37,6 @@ def label_encode(df, le_dict):
     if cols_to_drop:
         df = df.drop(columns=[cols_to_drop])
 
-    df.to_csv("predictTest.csv")
-
     return df
 
 def label_decode(num, le_dict, column):
@@ -44,6 +44,12 @@ def label_decode(num, le_dict, column):
     rNum = le.inverse_transform(num)
 
     return rNum
+
+def feature_importance(model, df):
+    explainer = shap.TreeExplainer(model)
+    shap_values = explainer.shap_values(df)
+
+    shap.summary_plot(shap_values, df, plot_type = "bar", class_names=["4111", "4222", "4333", "4444", "4555"])
 
 file_num = int((len(glob.glob("models/*.pkl"))/2)-1)
 
@@ -71,3 +77,5 @@ pred_df.to_csv("predTest.csv")
 
 pred = label_decode(model.predict(pred_df), le_dict, target)
 print(f"Account: {pred}")
+
+feature_importance(model, pred_df)

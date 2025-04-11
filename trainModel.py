@@ -96,5 +96,5 @@ clf.fit(train_df[features], train_df[target],
 # Calculate accuracy
 accuracy(valid_df[target], valid_df[features])
 
-# Save model as .pkl
+# Save model and label encoder dictionary as .pkl
 save_model(clf, le_dict)
