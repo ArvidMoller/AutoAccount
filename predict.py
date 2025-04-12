@@ -1,8 +1,9 @@
 import glob
 import pickle
-import shap
-import pandas as pd
-import matplotlib.pyplot as plt
+import shap # type: ignore
+import numpy as np # type: ignore
+import pandas as pd # type: ignore
+import matplotlib.pyplot as plt # type: ignore
 
 
 df = pd.read_csv("predict.csv")
@@ -45,11 +46,28 @@ def label_decode(num, le_dict, column):
 
     return rNum
 
-def feature_importance(model, df):
+# + in graph: Feature that increases probability of predicted class
+# - in graph: Feature that decreases probability of predicted class
+def feature_importance(model, df, pred, predicted_rows):
+    # Configure SHAP
     explainer = shap.TreeExplainer(model)
     shap_values = explainer.shap_values(df)
 
-    shap.summary_plot(shap_values, df, plot_type = "bar", class_names=["4111", "4222", "4333", "4444", "4555"])
+    # Get index of predicted class in list of classes
+    class_index = pred[0]
+
+    # Get SHAP-data for the predicted class
+    shap_vals_instance_class = shap_values[predicted_rows-1, :, class_index]
+
+    # Create explain-object for SHAP
+    explanation = shap.Explanation(
+        values=shap_vals_instance_class,
+        base_values=explainer.expected_value[class_index],
+        feature_names=["Supplier", "Amount", "Department", "Cost Center", "Project ID", "Personnel", "Reference", "Tax Procentage", "City", "Category", "Year Issued", "Month Issued", "Day Issued", "Hour Issued", "Minute Issued"]
+    )
+
+    # Create graph
+    shap.plots.bar(explanation)
 
 file_num = int((len(glob.glob("models/*.pkl"))/2)-1)
 
@@ -75,7 +93,8 @@ pred_df = df.drop(columns=target)
 
 pred_df.to_csv("predTest.csv")
 
-pred = label_decode(model.predict(pred_df), le_dict, target)
-print(f"Account: {pred}")
+pred = model.predict(pred_df)
+pred_decoded = label_decode(pred, le_dict, target)
+print(f"Account: {pred_decoded}")
 
-feature_importance(model, pred_df)
+feature_importance(model, pred_df, pred, 1)

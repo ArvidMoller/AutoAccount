@@ -1,12 +1,12 @@
 import os
 import glob
 import pickle
-import numpy as np
-import pandas as pd
-import xgboost as xgb 
-from sklearn import metrics
-from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
+import numpy as np # type: ignore
+import pandas as pd # type: ignore
+import xgboost as xgb # type: ignore
+from sklearn import metrics # type: ignore
+from sklearn.preprocessing import LabelEncoder # type: ignore
+from sklearn.model_selection import train_test_split # type: ignore
 
 
 def to_dateTime(df, col):
