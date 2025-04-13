@@ -5,9 +5,6 @@ import numpy as np # type: ignore
 import pandas as pd # type: ignore
 import matplotlib.pyplot as plt # type: ignore
 
-
-df = pd.read_csv("predict.csv")
-
 def to_dateTime(df, col):
     time = ["year", "month", "day", "hour", "minute"]
 
@@ -60,41 +57,57 @@ def feature_importance(model, df, pred, predicted_rows):
     shap_vals_instance_class = shap_values[predicted_rows-1, :, class_index]
 
     # Create explain-object for SHAP
-    explanation = shap.Explanation(
+    predExplainer = shap.Explanation(
         values=shap_vals_instance_class,
         base_values=explainer.expected_value[class_index],
         feature_names=["Supplier", "Amount", "Department", "Cost Center", "Project ID", "Personnel", "Reference", "Tax Procentage", "City", "Category", "Year Issued", "Month Issued", "Day Issued", "Hour Issued", "Minute Issued"]
     )
 
     # Create graph
-    shap.plots.bar(explanation)
+    shap.plots.bar(predExplainer)
 
+
+# Load dataframe with input data
+df = pd.read_csv("predict.csv")
+
+# Get number of model files (from 0) in /models
 file_num = int((len(glob.glob("models/*.pkl"))/2)-1)
 
+# Input loop for choosing a model to use
 user_input = input(f"Load which model (0-{file_num}) \n")
 while not user_input.isnumeric() or int(user_input) > file_num:
     user_input = input(f"Load which model (0-{file_num}) \n")
 
+# Get model and model info path
 model_path = f"models/model{int(user_input)}.pkl"
 info_path = f"models/modelInfo{int(user_input)}.pkl"
 
+# Load model and model info
 model = pickle.load(open(model_path, "rb"))
 le_dict = pickle.load(open(info_path, "rb"))
 
+# Define target
 target = "account"
 
+# Convert "created_at" from YY:MM:DD:HH:MM to separate columns if "created_at" has a value. Else, remove "created_at" column. 
 if "created_at" in df.columns and not df["created_at"].isna().all():
     df = to_dateTime(df, "created_at")
 else:
     df = df.drop(columns="created_at")
 
+# Encode input dataframe with the same encoder as the training data and remove the target column
 pred_df = label_encode(df, le_dict)
 pred_df = df.drop(columns=target)
 
+# Save predared dataframe to .csv for debugging
 pred_df.to_csv("predTest.csv")
 
+# Make a prediction with loaded model
 pred = model.predict(pred_df)
+
+# Decode predicted value and print in terminal
 pred_decoded = label_decode(pred, le_dict, target)
 print(f"Account: {pred_decoded}")
 
+# Make a bar chart for feature importence
 feature_importance(model, pred_df, pred, 1)
