@@ -59,7 +59,8 @@ def save_model(clf, dict):
     pickle.dump(clf, open(f"models/model{file_num}.pkl", "wb"))
     pickle.dump(dict, open(f"models/modelInfo{file_num}.pkl", "wb"))
 
-df = pd.read_csv("historical_transactions.csv")
+df = pd.read_csv("training_data.csv")
+
 
 # Define a target column
 target = "account"
