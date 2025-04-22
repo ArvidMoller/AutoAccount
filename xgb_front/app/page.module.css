@@ -16,6 +16,11 @@
   font-family: var(--font-geist-sans);
 }
 
+.header{
+  font-size: 10vh;
+  font-family: inherit
+}
+
 @media (prefers-color-scheme: dark) {
   .page {
     --gray-rgb: 255, 255, 255;
@@ -29,9 +34,11 @@
 
 .main {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 32px;
   grid-row-start: 2;
+  margin-left: 10vw;
+  margin-right: 10vw;
 }
 
 .main ol {

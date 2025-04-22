@@ -8,6 +8,16 @@ from sklearn import metrics # type: ignore
 from sklearn.preprocessing import LabelEncoder # type: ignore
 from sklearn.model_selection import train_test_split # type: ignore
 
+def choose_dataset():
+    user_input = input("Load which dataset (.csv)? \n")
+    os.chdir(f"{os.getcwd()}/dataset")
+    acceptedInput = glob.glob("*.csv")
+    os.chdir("..")
+    
+    while not user_input in acceptedInput:
+        user_input = input("Load which dataset? \n")
+
+    return f"dataset/{user_input}"
 
 def to_dateTime(df, col):
     time = ["year", "month", "day", "hour", "minute"]
@@ -59,8 +69,8 @@ def save_model(clf, dict):
     pickle.dump(clf, open(f"models/model{file_num}.pkl", "wb"))
     pickle.dump(dict, open(f"models/modelInfo{file_num}.pkl", "wb"))
 
-df = pd.read_csv("training_data.csv")
-
+df = pd.read_csv(choose_dataset())
+df.info()
 
 # Define a target column
 target = "account"
