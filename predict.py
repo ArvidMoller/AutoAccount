@@ -64,7 +64,10 @@ def feature_importance(model, df, pred, predicted_rows):
     )
 
     # Create graph
-    shap.plots.bar(predExplainer)
+    shap.plots.bar(predExplainer, show=False)
+    # Spara som .png
+    plt.savefig("xgb_front/public/shap_bar.png", bbox_inches='tight')
+    plt.close()
 
 
 # Load dataframe with input data

@@ -3,127 +3,42 @@ import styles from "./page.module.css";
 
 export default function Home() {
   return (
-    // <div className={styles.page}>
-    //   <main className={styles.main}>
-    //     <Image
-    //       className={styles.logo}
-    //       src="/next.svg"
-    //       alt="Next.js logo"
-    //       width={180}
-    //       height={38}
-    //       priority
-    //     />
-    //     <ol>
-    //       <li>
-    //         Get started by editing <code>app/page.tsx</code>.
-    //       </li>
-    //       <li>Save and see your changes instantly.</li>
-    //     </ol>
-
-    //     <div className={styles.ctas}>
-    //       <a
-    //         className={styles.primary}
-    //         href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-    //         target="_blank"
-    //         rel="noopener noreferrer"
-    //       >
-    //         <Image
-    //           className={styles.logo}
-    //           src="/vercel.svg"
-    //           alt="Vercel logomark"
-    //           width={20}
-    //           height={20}
-    //         />
-    //         Deploy now
-    //       </a>
-    //       <a
-    //         href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-    //         target="_blank"
-    //         rel="noopener noreferrer"
-    //         className={styles.secondary}
-    //       >
-    //         Read our docs
-    //       </a>
-    //     </div>
-    //   </main>
-    //   <footer className={styles.footer}>
-    //     <a
-    //       href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       <Image
-    //         aria-hidden
-    //         src="/file.svg"
-    //         alt="File icon"
-    //         width={16}
-    //         height={16}
-    //       />
-    //       Learn
-    //     </a>
-    //     <a
-    //       href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       <Image
-    //         aria-hidden
-    //         src="/window.svg"
-    //         alt="Window icon"
-    //         width={16}
-    //         height={16}
-    //       />
-    //       Examples
-    //     </a>
-    //     <a
-    //       href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       <Image
-    //         aria-hidden
-    //         src="/globe.svg"
-    //         alt="Globe icon"
-    //         width={16}
-    //         height={16}
-    //       />
-    //       Go to nextjs.org →
-    //     </a>
-    //   </footer>
-    // </div>
-
     <div className={styles.page}>
       <header className={styles.header}>
         Auto Konteraren
       </header>
 
       <main className={styles.main}>
-        <form>
-          <label>Supplier</label>
+        <form className={styles.form}>
+          <label className={styles.label}>Supplier</label>
           <input type="text"></input>
-          <label>Amount</label>
+          <label className={styles.label}>Amount</label>
           <input type="number"></input>
-          <label>Department</label>
+          <label className={styles.label}>Department</label>
           <input type="text"></input>
-          <label>Cost Center</label>
+          <label className={styles.label}>Cost Center</label>
           <input type="text"></input>
-          <label>Project ID</label>
+          <label className={styles.label}>Project ID</label>
           <input type="text"></input>
-          <label>Personnel</label>
+          <label className={styles.label}>Personnel</label>
           <input type="text"></input>
-          <label>Refrence</label>
+          <label className={styles.label}>Refrence</label>
           <input type="text"></input>
-          <label>Tax Percentage</label>
+          <label className={styles.label}>Tax Percentage</label>
           <input type="number"></input>
-          <label>City</label>
+          <label className={styles.label}>City</label>
           <input type="text"></input>
-          <label>Crated at</label>
+          <label className={styles.label}>Crated at</label>
           <input type="datetime-local"></input>
-          <label>Category</label>
+          <label className={styles.label}>Category</label>
           <input type="text"></input>
 
-          <button>Submit</button>
+          <button  className={styles.button}>Submit</button>
         </form>
+
+        <section>
+          <img src="../public/shap_bar.png" alt="Feature Importence Graph"></img>
+        </section>
       </main>
     </div>
   );
