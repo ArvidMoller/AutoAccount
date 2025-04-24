@@ -1,3 +1,11 @@
+# File: trainModel.py
+# Author: Arvid Möller
+# Date: 2025-04-24
+# Description: This program trains a extreme gradient boost (XGB) classifier model on data (saved in a .csv document) from invoices to be able to predict from which account the invoice drew money. The model and model info is then saved to pickle (.pkl) files named model[number].pkl and modelInfo[number].pkl respectivly, for later use. The following features are required in the training data: supplier, amount, department, account, cost_center, project_id, personnel, reference, tax_percentage, city, created_at, category. Target: account.
+# Required files: void
+# Required modules: os, glob, pickle, shap, numpy, pandas, xgboost, sklearn
+
+
 import os
 import glob
 import pickle
@@ -8,6 +16,19 @@ from sklearn import metrics # type: ignore
 from sklearn.preprocessing import LabelEncoder # type: ignore
 from sklearn.model_selection import train_test_split # type: ignore
 
+
+# 
+# 
+# Paramiters: 
+# 
+# 
+# Returns: 
+
+# This function asks the user to choose a dataset to train the model on through a input loop. Only awnser that exists as .csv files in the dataset folder are accepted. 
+# 
+# Paramiters: void
+# 
+# Returns: The path to the choosen dataset.
 def choose_dataset():
     user_input = input("Load which dataset (.csv)? \n")
     os.chdir(f"{os.getcwd()}/dataset")
@@ -19,6 +40,14 @@ def choose_dataset():
 
     return f"dataset/{user_input}"
 
+
+# Changes the format of time from YY:MM:DD HH:MM to individuall cells in the dataframe.
+# 
+# Paramiters: 
+# - df: The dataframe in which the datetime is stored
+# - col: What column the datetime is in.
+# 
+# Returns: The dataframe with Y, M, D, H and M in sperarate columns.  
 def to_dateTime(df, col):
     time = ["year", "month", "day", "hour", "minute"]
 
@@ -34,6 +63,15 @@ def to_dateTime(df, col):
 
     return df
 
+# Label encodes all objects in the dataframe using scikit-learns label encoder by looping through all columns.
+# 
+# Paramiters:
+# df: The dataframe to encode
+# target_label: The feature name of the target column. Since targets must be numbers staring from 1, target_label is used to ensure that the target column gets encoded.
+# 
+# Return: 
+# - df: The dataframe all objects encoded.
+# - le_dict: A dictionary containing all label encoders used to encode the dataframe. 
 def label_encode(df, target_label):
     le_dict = {}
 
@@ -45,6 +83,14 @@ def label_encode(df, target_label):
 
     return df, le_dict
 
+
+# Calculates and writes out the accuracy of the model as decimal numbers (0-1) using sci-kit learns metrics. 
+# 
+# Paramiters: 
+# - target: The name of the target column.
+# - features: All columns except the target column.
+# 
+# Returns: void
 def accuracy(target, features):
     y_true = target
     y_pred = clf.predict(features)
@@ -54,6 +100,13 @@ def accuracy(target, features):
     metrics.accuracy_score(y_true, y_pred)
     print(metrics.classification_report(y_true, y_pred))
 
+
+# Asks the user if the model should be saved using a input loop. If so, the model and model info (the label encodning dictionary) is saved as separate pickle (.pkl) files named model[number].pkl and modelInfo[number].pkl. The number is determined by the number of other pickle files in the models folder. numbering starts at 0. 
+# 
+# Paramiters: 
+# 
+# 
+# Returns: 
 def save_model(clf, dict):
     user_input = input("Save model as .pkl? (y/n) \n")
     acceptedInput = ["y", "n"]

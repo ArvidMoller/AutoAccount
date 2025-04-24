@@ -3,7 +3,8 @@
 # Date: 2025-04-24
 # Description: This program pedicts the account from which a invoice drew money from based on info from the invoice (supplier, amount, department, account, cost_center, project_id, personnel, reference, tax_percentage, city, created_at, category) using a machine learning . 
 # Required files: model[number].pkl, modelInfo[number].pkl
-# Required modules: glob, pickle, shap, numpy, pandas, matplotlib
+# Required modules: glob, pickle, shap, numpy, pandas, flask, matplotlib
+
 
 import glob
 import pickle
