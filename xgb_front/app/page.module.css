@@ -22,10 +22,23 @@
 }
 
 .form{
+  grid-area: form;
   display: flex;
   flex-direction: column;
 
   align-items: center;
+}
+
+.radioDiv{
+  display: flex;
+  flex-wrap: wrap;
+
+  align-content: center;
+  justify-content: center;
+}
+
+.radioButtons{
+  margin-right: 1vh;
 }
 
 .label{
@@ -35,6 +48,22 @@
 .button {
   padding: 1vh;
   margin: 2vh;
+}
+
+.graphContainer{
+  grid-area: graph;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.graph{
+  padding-top: 2vh;
+}
+
+.graphText{
+  text-align: center;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -49,8 +78,10 @@
 }
 
 .main {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 40% 60%;
+  grid-template-areas: 
+  'form graph';
   gap: 32px;
   grid-row-start: 2;
   margin-left: 10vw;

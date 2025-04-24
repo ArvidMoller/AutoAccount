@@ -1,10 +1,26 @@
+# File: predict.py
+# Author: Arvid Möller
+# Date: 2025-04-24
+# Description: This program pedicts the account from which a invoice drew money from based on info from the invoice (supplier, amount, department, account, cost_center, project_id, personnel, reference, tax_percentage, city, created_at, category) using a machine learning . 
+# Required files: model[number].pkl, modelInfo[number].pkl
+# Required modules: glob, pickle, shap, numpy, pandas, matplotlib
+
 import glob
 import pickle
 import shap # type: ignore
 import numpy as np # type: ignore
 import pandas as pd # type: ignore
+# from flask import Flask # type: ignore
 import matplotlib.pyplot as plt # type: ignore
 
+
+# Changes the format of time from YY:MM:DD HH:MM to individuall cells in the dataframe.
+# 
+# Paramiters: 
+# - df: The dataframe in which the datetime is stored
+# - col: What column the datetime is in.
+# 
+# Returns: The dataframe with Y, M, D, H and M in sperarate columns.  
 def to_dateTime(df, col):
     time = ["year", "month", "day", "hour", "minute"]
 
@@ -20,6 +36,14 @@ def to_dateTime(df, col):
 
     return df
 
+
+# Label encodes all objects in the dataframe using scikit-learns label encoder by looping through all columns. The labels are the same as in trainModel.py.
+# 
+# Paramiters:
+# df: The dataframe to encode
+# le_dict: A dictionary containing the label encoders used in trainModel.py. The encoders are loaded for each column. 
+# 
+# Return: The dataframe all objects encoded.
 def label_encode(df, le_dict):
     cols_to_drop = []
 
@@ -37,14 +61,51 @@ def label_encode(df, le_dict):
 
     return df
 
+
+# Makes the prediction using xgboost built in prediction function, decodes it, prints it out in the terminal and then makes a feature importence graph using feature_importance function. 
+#
+# Paramiters: 
+# model: The model.
+# pred_df: The preprocessed dataframe with the values the prediction is based on.
+# le_dict:  A dictionary containing the label encoders used in trainModel.py.
+# target: The target column.
+#
+# Returns: void
+def make_prediction(model, pred_df, le_dict, target):
+    # Make a prediction with loaded model
+    pred = model.predict(pred_df)
+
+    # Decode predicted value and print in terminal
+    pred_decoded = label_decode(pred, le_dict, target)
+    print(f"Account: {pred_decoded}")
+
+    # Make a bar chart for feature importence
+    feature_importance(model, pred_df, pred, 1)
+
+# Decodes a values that has previously been label encoded using the label_encode.
+# 
+# Paramiters:
+# num: The value to decode.
+# le_dict: A dictionary containing the label encoders used in trainModel.py.
+# column: The column in the dataframe num is in. 
+# 
+# Returns: The decoded num.
 def label_decode(num, le_dict, column):
     le = le_dict[column]
     rNum = le.inverse_transform(num)
 
     return rNum
 
-# + in graph: Feature that increases probability of predicted class
-# - in graph: Feature that decreases probability of predicted class
+
+# Creates a feature importence graph using SHAP and saves it as a image so it can be displayed in the next.js app. Positive SHAP-value in graph means feature increased probability of predicted class. Negative SHAP-value in graph means feature decreased probability of predicted class. 
+# 
+# Paramiters:
+# model: The model loaded from the pickle file.
+# df: The dataframe with the data the prediction was based on.
+# pred: The predicted value.
+# predicted_rows: Number of predicted rows. 
+#
+# Returns: void
 def feature_importance(model, df, pred, predicted_rows):
     # Configure SHAP
     explainer = shap.TreeExplainer(model)
@@ -65,7 +126,7 @@ def feature_importance(model, df, pred, predicted_rows):
 
     # Create graph
     shap.plots.bar(predExplainer, show=False)
-    # Spara som .png
+    # Save as .png
     plt.savefig("xgb_front/public/shap_bar.png", bbox_inches='tight')
     plt.close()
 
@@ -92,7 +153,7 @@ le_dict = pickle.load(open(info_path, "rb"))
 # Define target
 target = "account"
 
-# Convert "created_at" from YY:MM:DD:HH:MM to separate columns if "created_at" has a value. Else, remove "created_at" column. 
+# Convert "created_at" from YY:MM:DD HH:MM to separate columns if "created_at" has a value. Else, remove "created_at" column. 
 if "created_at" in df.columns and not df["created_at"].isna().all():
     df = to_dateTime(df, "created_at")
 else:
@@ -105,12 +166,4 @@ pred_df = df.drop(columns=target)
 # Save predared dataframe to .csv for debugging
 pred_df.to_csv("predTest.csv")
 
-# Make a prediction with loaded model
-pred = model.predict(pred_df)
-
-# Decode predicted value and print in terminal
-pred_decoded = label_decode(pred, le_dict, target)
-print(f"Account: {pred_decoded}")
-
-# Make a bar chart for feature importence
-feature_importance(model, pred_df, pred, 1)
+make_prediction(model, pred_df, le_dict, target)
