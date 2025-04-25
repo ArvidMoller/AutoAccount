@@ -83,6 +83,7 @@ def make_prediction(model, pred_df, le_dict, target):
     # Make a bar chart for feature importence
     feature_importance(model, pred_df, pred, 1)
 
+
 # Decodes a values that has previously been label encoded using the label_encode.
 # 
 # Paramiters:

@@ -1,4 +1,12 @@
-/* CSS for the next.js app */
+/* 
+File: page.module.css
+Author: Arvid Möller
+Date: 2025-04-25
+Description: This file contains the css for the elements in the next.js app.
+Required files: void
+Required libraries: void
+*/
+
 
 .page {
   --gray-rgb: 0, 0, 0;

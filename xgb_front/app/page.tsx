@@ -1,4 +1,10 @@
-// HTML for the next.js app
+// File: page.tsx
+// Author: Arvid Möller
+// Date: 2025-04-25
+// Description: This file contains the HTML for the next.js app.  
+// Required files: page.module.css, images.d.ts
+// Required libraries: void
+
 
 import Image from "next/image";
 import styles from "./page.module.css";

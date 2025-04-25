@@ -17,13 +17,6 @@ from sklearn.preprocessing import LabelEncoder # type: ignore
 from sklearn.model_selection import train_test_split # type: ignore
 
 
-# 
-# 
-# Paramiters: 
-# 
-# 
-# Returns: 
-
 # This function asks the user to choose a dataset to train the model on through a input loop. Only awnser that exists as .csv files in the dataset folder are accepted. 
 # 
 # Paramiters: void
