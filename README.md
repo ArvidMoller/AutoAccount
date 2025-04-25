@@ -1,4 +1,4 @@
-# WordleBot
+# AutoAccount
 This program predicts what account a invoice drew money from by using a Extreme Gradient Boost (XGB) model. 
 
 ## Table of Contents
