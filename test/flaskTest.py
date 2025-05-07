@@ -1,9 +1,20 @@
-from flask import Flask     # type: ignore
+# from flask import Flask, request     # type: ignore
+# from flask_cors import CORS     # type: ignore
 
-app = Flask(__name__)
+# app = Flask(__name__)
+# CORS(app)
 
-x ="jhkaerbghjleavrg"
+# dict = {}
+# col_arr = ["supplier", "amount", "department", "cost_center", "project_id", "personnel", "reference", "tax", "city", "created_at", "category"] 
 
-@app.route("/")
-def hello_world():
-    return x
+# @app.route("/submit", methods=['POST'])
+# def submit():
+#     for i in col_arr:
+#         dict[i] = request.form[i]
+
+#     return dict
+
+
+# if __name__ == '__main__':
+#     app.run(debug=True, port=5001)
+

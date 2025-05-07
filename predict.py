@@ -3,7 +3,7 @@
 # Date: 2025-04-24
 # Description: This program pedicts the account from which a invoice drew money from based on info from the invoice (supplier, amount, department, account, cost_center, project_id, personnel, reference, tax_percentage, city, created_at, category) using a machine learning . 
 # Required files: model[number].pkl, modelInfo[number].pkl
-# Required modules: glob, pickle, shap, numpy, pandas, flask, matplotlib
+# Required modules: glob, pickle, shap, numpy, pandas, matplotlib
 
 
 import glob
@@ -11,7 +11,6 @@ import pickle
 import shap # type: ignore
 import numpy as np # type: ignore
 import pandas as pd # type: ignore
-# from flask import Flask # type: ignore
 import matplotlib.pyplot as plt # type: ignore
 
 
@@ -58,7 +57,7 @@ def label_encode(df, le_dict):
                 cols_to_drop.append(column)
 
     if cols_to_drop:
-        df = df.drop(columns=[cols_to_drop])
+        df = df.drop(columns=cols_to_drop)
 
     return df
 
@@ -76,12 +75,13 @@ def make_prediction(model, pred_df, le_dict, target):
     # Make a prediction with loaded model
     pred = model.predict(pred_df)
 
-    # Decode predicted value and print in terminal
+    # Decode predicted value
     pred_decoded = label_decode(pred, le_dict, target)
-    print(f"Account: {pred_decoded}")
 
     # Make a bar chart for feature importence
     feature_importance(model, pred_df, pred, 1)
+
+    return pred_decoded
 
 
 # Decodes a values that has previously been label encoded using the label_encode.
@@ -133,39 +133,22 @@ def feature_importance(model, df, pred, predicted_rows):
     plt.close()
 
 
-# Load dataframe with input data
-df = pd.read_csv("predict.csv")
+def main(model, le_dict, df):
+    # Define target
+    target = "account"
 
-# Get number of model files (from 0) in /models
-file_num = int((len(glob.glob("models/*.pkl"))/2)-1)
+    # Convert "created_at" from YY:MM:DD HH:MM to separate columns if "created_at" has a value. Else, remove "created_at" column. 
+    if "created_at" in df.columns and not df["created_at"].isna().all():
+        df = to_dateTime(df, "created_at")
+    else:
+        df = df.drop(columns="created_at")
 
-# Input loop for choosing a model to use
-user_input = input(f"Load which model (0-{file_num}) \n")
-while not user_input.isnumeric() or int(user_input) > file_num:
-    user_input = input(f"Load which model (0-{file_num}) \n")
+    # Encode input dataframe with the same encoder as the training data and remove the target column
+    pred_df = label_encode(df, le_dict)
 
-# Get model and model info path
-model_path = f"models/model{int(user_input)}.pkl"
-info_path = f"models/modelInfo{int(user_input)}.pkl"
+    # Save predared dataframe to .csv for debugging
+    pred_df.to_csv("predTest.csv")
 
-# Load model and model info
-model = pickle.load(open(model_path, "rb"))
-le_dict = pickle.load(open(info_path, "rb"))
+    pred_value = make_prediction(model, pred_df, le_dict, target)
 
-# Define target
-target = "account"
-
-# Convert "created_at" from YY:MM:DD HH:MM to separate columns if "created_at" has a value. Else, remove "created_at" column. 
-if "created_at" in df.columns and not df["created_at"].isna().all():
-    df = to_dateTime(df, "created_at")
-else:
-    df = df.drop(columns="created_at")
-
-# Encode input dataframe with the same encoder as the training data and remove the target column
-pred_df = label_encode(df, le_dict)
-pred_df = df.drop(columns=target)
-
-# Save predared dataframe to .csv for debugging
-pred_df.to_csv("predTest.csv")
-
-make_prediction(model, pred_df, le_dict, target)
+    return str(pred_value)
