@@ -1,3 +1,10 @@
+# File: predict.py
+# Author: Arvid Möller
+# Date: 2025-05-08
+# Description: The main file for the backend, uses FlaskAPI to take input from the NEXT.js front-end and then calls the main() function in the predict.py file. 
+# Required files: model[number].pkl, modelInfo[number].pkl, predict.py
+# Required modules: Flask, Flask CORS, pickle, pandas
+
 from flask import Flask, request, jsonify     # type: ignore
 from flask_cors import CORS     # type: ignore
 import pandas as pd     # type: ignore
@@ -14,6 +21,12 @@ le_dict = pickle.load(open("models/modelInfo2.pkl", "rb"))
 data = {}
 col_arr = ["supplier", "amount", "department", "cost_center", "project_id", "personnel", "reference", "tax_percentage", "city", "created_at", "Test_category"] 
 
+
+# API POST for the submit button in the NEXT.js front end. 
+#
+# Paramiters: void
+#
+# Return: The prediction as JSON.
 @app.route("/submit", methods=['POST'])
 def submit():
     for i in col_arr:
@@ -34,5 +47,6 @@ def submit():
     return jsonify({"pred_value": pred_value})
 
 
+# Change port to 5001 and start debug mode
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

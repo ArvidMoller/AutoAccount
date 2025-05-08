@@ -97,9 +97,10 @@ def accuracy(target, features):
 # Asks the user if the model should be saved using a input loop. If so, the model and model info (the label encodning dictionary) is saved as separate pickle (.pkl) files named model[number].pkl and modelInfo[number].pkl. The number is determined by the number of other pickle files in the models folder. numbering starts at 0. 
 # 
 # Paramiters: 
+# clf: The model object
+# dict: A dictionary containing all label encoders used to encode the dataframe.
 # 
-# 
-# Returns: 
+# Returns: void
 def save_model(clf, dict):
     user_input = input("Save model as .pkl? (y/n) \n")
     acceptedInput = ["y", "n"]

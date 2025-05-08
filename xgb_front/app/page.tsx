@@ -2,17 +2,10 @@
 // Author: Arvid Möller
 // Date: 2025-04-25
 // Description: This file contains the HTML for the next.js app.  
-// Required files: page.module.css, images.d.ts
+// Required files: page.module.css, images.d.ts, next.cofig.ts
 // Required libraries: void
 
-
-// import Image from "next/image";
-// import styles from "./page.module.css";
-
-// export default function Home() {
-
-
-"use client";   // Viktigt i Next.js app router
+"use client";
 
 import { useState } from "react";
 import Image from "next/image";
@@ -20,6 +13,7 @@ import styles from "./page.module.css";
 
 export default function Home() {
   const [predictedAccount, setPredictedAccount] = useState<string>("");
+  const [imageSrc, setImageSrc] = useState('http://localhost:5001/static/shap_bar.png');
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();  // Förhindra vanlig form-submit
@@ -37,16 +31,19 @@ export default function Home() {
     console.log(result);  // Debug
 
     // Spara predicted account i state
-    setPredictedAccount(result.predicted_account[0]);  // predicted_account är en lista
+    setPredictedAccount(result.pred_value); 
+
+    setImageSrc(`http://localhost:5001/static/shap_bar.png?${new Date().getTime()}`);
   }
+
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        Auto Konteraren
+        AutoAccount
       </header>
 
       <main className={styles.main}>
-        <form className={styles.form} action="http://localhost:5001/submit" method="POST">
+        <form className={styles.form} onSubmit={handleSubmit}>
           <label className={styles.label}><strong>Supplier</strong></label>
           <div className={styles.radioDiv}>
             <label className={styles.label}>Supplier1</label>
@@ -198,7 +195,7 @@ export default function Home() {
           <p>Account: {predictedAccount}</p>
 
           <h2>Feature Importence</h2>
-          <Image className={styles.graph} src="/shap_bar.png" width={600} height={393} alt="Feature Importence Graph"/>   {/* Height to width ratio 1,526408450704225352112676056338:1  */}
+          <Image className={styles.graph} src={imageSrc} width={600} height={393} alt="Feature Importence Graph"/>   {/* Height to width ratio 1,526408450704225352112676056338:1  */}
           <p className={styles.graphText}>A higher SHAP-value means that feature was more relevant in the making of the prediction.</p>
         </section>
       </main>

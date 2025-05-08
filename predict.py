@@ -1,13 +1,11 @@
 # File: predict.py
 # Author: Arvid Möller
 # Date: 2025-04-24
-# Description: This program pedicts the account from which a invoice drew money from based on info from the invoice (supplier, amount, department, account, cost_center, project_id, personnel, reference, tax_percentage, city, created_at, category) using a machine learning . 
+# Description: This program pedicts the account from which a invoice drew money from based on info from the invoice (supplier, amount, department, account, cost_center, project_id, personnel, reference, tax_percentage, city, created_at, category) using a machine learning model (XGB) to predict the account. 
 # Required files: model[number].pkl, modelInfo[number].pkl
-# Required modules: glob, pickle, shap, numpy, pandas, matplotlib
+# Required modules:shap, numpy, pandas, matplotlib
 
 
-import glob
-import pickle
 import shap # type: ignore
 import numpy as np # type: ignore
 import pandas as pd # type: ignore
@@ -20,7 +18,8 @@ import matplotlib.pyplot as plt # type: ignore
 # - df: The dataframe in which the datetime is stored
 # - col: What column the datetime is in.
 # 
-# Returns: The dataframe with Y, M, D, H and M in sperarate columns.  
+# Returns: 
+# df: The dataframe with Y, M, D, H and M in sperarate columns.  
 def to_dateTime(df, col):
     time = ["year", "month", "day", "hour", "minute"]
 
@@ -43,7 +42,8 @@ def to_dateTime(df, col):
 # df: The dataframe to encode
 # le_dict: A dictionary containing the label encoders used in trainModel.py. The encoders are loaded for each column. 
 # 
-# Return: The dataframe all objects encoded.
+# Return: 
+# df: The dataframe all objects encoded.
 def label_encode(df, le_dict):
     cols_to_drop = []
 
@@ -70,7 +70,8 @@ def label_encode(df, le_dict):
 # le_dict:  A dictionary containing the label encoders used in trainModel.py.
 # target: The target column.
 #
-# Returns: void
+# Returns: 
+# pred_decoded: The decoded prediction
 def make_prediction(model, pred_df, le_dict, target):
     # Make a prediction with loaded model
     pred = model.predict(pred_df)
@@ -91,7 +92,8 @@ def make_prediction(model, pred_df, le_dict, target):
 # le_dict: A dictionary containing the label encoders used in trainModel.py.
 # column: The column in the dataframe num is in. 
 # 
-# Returns: The decoded num.
+# Returns: 
+# rNum: The decoded num.
 def label_decode(num, le_dict, column):
     le = le_dict[column]
     rNum = le.inverse_transform(num)
@@ -129,10 +131,19 @@ def feature_importance(model, df, pred, predicted_rows):
     # Create graph
     shap.plots.bar(predExplainer, show=False)
     # Save as .png
-    plt.savefig("xgb_front/public/shap_bar.png", bbox_inches='tight')
+    plt.savefig("static/shap_bar.png", bbox_inches='tight')
     plt.close()
 
 
+# The main function that preprocesses the data and then calls on make_prediction to make a prediction. 
+# 
+# Paramiters:
+# model: The model loaded from the pickle file.
+# le_dict: A dictionary containing the label encoders used in trainModel.py.
+# df: The dataframe with the data the prediction was based on.
+#
+# Returns: 
+# pred_value: The prediction as a string.
 def main(model, le_dict, df):
     # Define target
     target = "account"
@@ -149,6 +160,7 @@ def main(model, le_dict, df):
     # Save predared dataframe to .csv for debugging
     pred_df.to_csv("predTest.csv")
 
+    # Makes prediction
     pred_value = make_prediction(model, pred_df, le_dict, target)
-
-    return str(pred_value)
+   
+    return str(pred_value).replace("[", "").replace("]", "")

@@ -1,2 +1,2 @@
 ,supplier,amount,department,cost_center,project_id,personnel,reference,tax_percentage,city,Test_category,created_at_year,created_at_month,created_at_day,created_at_hour,created_at_minute
-0,4,43567.0,1,1,1,1,3,20.0,1,4,2024,11,24,12,55
+0,1,23456.0,3,0,4,3,2,14.0,0,3,2024,11,25,12,55
