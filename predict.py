@@ -158,7 +158,7 @@ def main(model, le_dict, df):
     pred_df = label_encode(df, le_dict)
 
     # Save predared dataframe to .csv for debugging
-    pred_df.to_csv("predTest.csv")
+    # pred_df.to_csv("predTest.csv")
 
     # Makes prediction
     pred_value = make_prediction(model, pred_df, le_dict, target)
