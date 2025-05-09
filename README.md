@@ -10,6 +10,7 @@ This program predicts what account a invoice drew money from by using a Extreme 
 6. [Add new training data](#add-new-training-data)
 7. [Included Python Files](#included-python-files)
 8. [Frontend](#frontend)
+9. [Virtual Environment](#virtual-environment)
 
 ## Showcase of AutoAccount
 https://github.com/user-attachments/assets/08004744-9462-4648-a93a-0e822c9c7b54
