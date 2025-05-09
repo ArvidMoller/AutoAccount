@@ -21,17 +21,19 @@ Coming Soon
 - `XGBoost`
 - `Sic-Kit Learn`
 - `Matplotlib`
+- `SHAP`
 - `Flask`
+- `Flask-CORS`
 
 
 ## Installation
 1. **Clone the repo**  
    In GIT Bash, type:  
-   `git clone https://github.com/ArvidMoller/WordleBot.git`
+   `git clone https://github.com/ArvidMoller/AutoAccount`
 2. **Open in VS Code or another preferred editor**
-3. **Install gems if not already installed**  
+3. **Install modules if not already installed**  
    Run:  
-   `pip install numpy pandas xgboost scikit-learn matplotlib flask`
+   `pip install numpy pandas xgboost scikit-learn matplotlib flask shap`
 
 ## Train Model
 1. Navigate to the correct directory using `cd` in the terminal.
@@ -41,11 +43,9 @@ Coming Soon
 4. Save the model.
 
 ## Predict with Model
-1. Navigate to the correct directory using `cd` in the terminal.
-2. Type in your data in the predict.csv file.
-3. Run:  
-   `python predict.py`
-(a front end is in the works)
+1. Natigate to the `xgb_front` folder and run `npm run dev:all`.
+2. Open `http://localhost:3000` in a browser to access the front-end.
+3. Enter your data and hit submit.
 
 ## Add new training data
 1. Make a csv document with your new data
@@ -56,6 +56,8 @@ Coming Soon
    This program trains a new xgboost model with data from a csv document in the `dataset` folder.
 2. `predict.py`
    This program predicts the account the invoice drew money from using the model trained in the `trainModel.py` program.
+3. `main.py`
+   This file contains the API and fetches data from the front-end. Then the file calls the `main()` function in `predict.py`. 
 
 ## Frontend
-The front end is a NEXT.js app named `xgb_front` and can be found in the folder with the same name. The front end is still under development and isn't yet ready to be used. 
+The front end is a NEXT.js app named `xgb_front` and can be found in the folder with the same name.
