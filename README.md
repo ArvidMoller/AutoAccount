@@ -15,20 +15,20 @@ This program predicts what account a invoice drew money from by using a Extreme 
 https://github.com/user-attachments/assets/08004744-9462-4648-a93a-0e822c9c7b54
 
 ## Required Modules
-- `OS`
-- `Glob`
-- `Pickle`
-- `Numpy`
-- `Pandas`
-- `XGBoost`
-- `Sic-Kit Learn`
-- `Matplotlib`
-- `SHAP`
-- `Flask`
-- `Flask-CORS`
-
+- `os`
+- `glob`
+- `pickle`
+- `numpy`
+- `pandas`
+- `xgboost`
+- `scikit-learn`
+- `matplotlib`
+- `shap`
+- `flask`
+- `flask-cors`
 
 ## Installation
+I recommend running the program in an virtual environment. Create one by following [Virtual Environment](#virtual-environment)
 1. **Clone the repo**  
    In GIT Bash, type:  
    `git clone https://github.com/ArvidMoller/AutoAccount`
@@ -45,7 +45,7 @@ https://github.com/user-attachments/assets/08004744-9462-4648-a93a-0e822c9c7b54
 4. Save the model.
 
 ## Predict with Model
-1. Natigate to the `xgb_front` folder and run `npm run dev:all`.
+1. Navigate to the `xgb_front` folder and run `npm run dev:all`.
 2. Open `http://localhost:3000` in a browser to access the front-end.
 3. Enter your data and hit submit.
 
@@ -63,3 +63,9 @@ https://github.com/user-attachments/assets/08004744-9462-4648-a93a-0e822c9c7b54
 
 ## Frontend
 The front end is a NEXT.js app named `xgb_front` and can be found in the folder with the same name.
+
+## Virtual Environment
+1. Open the folder you want to create the virtual environment in the terminal using `cd`
+2. Run `python -m venv <name of virtual environment>`
+3. To activate virtual environment, run `venv/Scripts/activate`
+4. To deactivate virtual environment, run `deactivate`
