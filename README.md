@@ -3,14 +3,16 @@ This program predicts what account a invoice drew money from by using a Extreme 
 
 ## Table of Contents
 1. [Showcase of AutoAccount](#showcase-of-autoaccount)
-2. [Required Gems](#required-gems)  
+2. [Required Modules](#required-modules)  
 3. [Installation](#installation)  
-4. [Run Script](#run-script)  
-5. [Add new training data](#add-new-training-data)
-6. [Frontend](#frontend)
+4. [Train Model](#train-model)
+5. [Predict with Model](#predict-with-model) 
+6. [Add new training data](#add-new-training-data)
+7. [Included Python Files](#included-python-files)
+8. [Frontend](#frontend)
 
 ## Showcase of AutoAccount
-Coming Soon
+https://github.com/user-attachments/assets/08004744-9462-4648-a93a-0e822c9c7b54
 
 ## Required Modules
 - `OS`
