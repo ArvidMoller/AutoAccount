@@ -131,7 +131,7 @@ df, le_dict = label_encode(df, target)
 # Define feautres columns
 features = df.drop(columns=[target]).columns
 
-df.to_csv("test.csv")
+df.to_csv("encodedDataset.csv")
 
 # Make a training df and a valid df for training
 n_valid = 0.2

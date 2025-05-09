@@ -7,8 +7,10 @@
 
 
 import shap # type: ignore
-import numpy as np # type: ignore
+import numpy as np  # type: ignore
 import pandas as pd # type: ignore
+import matplotlib   # type: ignore
+matplotlib.use('agg')   # Configure matplotlib to use agg instead of tkinter
 import matplotlib.pyplot as plt # type: ignore
 
 
@@ -132,7 +134,7 @@ def feature_importance(model, df, pred, predicted_rows):
     shap.plots.bar(predExplainer, show=False)
     # Save as .png
     plt.savefig("static/shap_bar.png", bbox_inches='tight')
-    plt.close()
+    plt.close('all')
 
 
 # The main function that preprocesses the data and then calls on make_prediction to make a prediction. 
@@ -158,7 +160,7 @@ def main(model, le_dict, df):
     pred_df = label_encode(df, le_dict)
 
     # Save predared dataframe to .csv for debugging
-    # pred_df.to_csv("predTest.csv")
+    # pred_df.to_csv("predEncoded.csv")
 
     # Makes prediction
     pred_value = make_prediction(model, pred_df, le_dict, target)

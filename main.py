@@ -1,4 +1,4 @@
-# File: predict.py
+# File: main.py
 # Author: Arvid Möller
 # Date: 2025-05-08
 # Description: The main file for the backend, uses FlaskAPI to take input from the NEXT.js front-end and then calls the main() function in the predict.py file. 
@@ -18,17 +18,18 @@ CORS(app)
 model = pickle.load(open("models/model2.pkl", "rb"))
 le_dict = pickle.load(open("models/modelInfo2.pkl", "rb"))
 
-data = {}
 col_arr = ["supplier", "amount", "department", "cost_center", "project_id", "personnel", "reference", "tax_percentage", "city", "created_at", "Test_category"] 
 
 
-# API POST for the submit button in the NEXT.js front end. 
+# This function contains the API for the submit button in the NEXT.js front-end and then calls the main() function in the predict.py file to make a prediction. 
 #
 # Paramiters: void
 #
 # Return: The prediction as JSON.
 @app.route("/submit", methods=['POST'])
 def submit():
+    data = {}
+
     for i in col_arr:
         if i in ["tax_percentage", "amount"]:
             try:
@@ -40,7 +41,6 @@ def submit():
 
 
     df = pd.DataFrame([data], columns=col_arr)
-    print(df)
 
     pred_value = predict.main(model, le_dict, df)
 
@@ -49,4 +49,4 @@ def submit():
 
 # Change port to 5001 and start debug mode
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(debug=False, port=5001)
